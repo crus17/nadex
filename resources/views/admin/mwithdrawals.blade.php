@@ -76,13 +76,18 @@ if (Auth('admin')->User()->dashboard_style == "light") {
 											<td>{{$deposit->to_deduct}}</td> 
 											<td>{{$deposit->payment_mode}}</td> 
 											<td>{{$deposit->duser->email}}</td> 
-											<td>{{$deposit->status}}</td> 
+											@if($deposit->status == "Approved")
+												<td class="fw-bold text-success">{{$deposit->status}}</td> 
+											@elseif($deposit->status == "Declined")
+												<td class="fw-bold text-danger">{{$deposit->status}}</td> 
+											@else
+												<td class="fw-bold">{{$deposit->status}}</td> 
+											@endif
 											<td>{{\Carbon\Carbon::parse($deposit->created_at)->toDayDateTimeString()}}</td> 
 											<td>
-											@if($deposit->status =="Processed") 
-											<a class="btn btn-success btn-sm" href="#">Processed</a>
-											@else
-											<a class="btn btn-primary btn-sm m-1" href="{{ url('admin/dashboard/pwithdrawal') }}/{{$deposit->id}}">Process</a>
+											@if($deposit->status =="Pending") 
+											<a class="btn btn-success btn-sm m-1" href="{{ url('admin/dashboard/pwithdrawal') }}/{{$deposit->id}}">Approve</a>
+											<a class="btn btn-danger btn-sm m-1" href="{{ url('admin/dashboard/dwithdrawal') }}/{{$deposit->id}}">Decline</a>
 											@endif
 											<a href="#" class="btn btn-info btn-sm m-1" data-toggle="modal" data-target="#viewModal{{$deposit->id}}"><i class="fa fa-eye"></i> View</a>
 											</td> 

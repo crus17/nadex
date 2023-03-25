@@ -426,7 +426,7 @@ class LogicController extends Controller
         //}
         withdrawals::where('id',$id)
         ->update([
-        'status' => 'Processed',
+        'status' => 'Approved',
         ]);
         
         $settings=settings::where('id', '=', '1')->first();
@@ -442,7 +442,38 @@ class LogicController extends Controller
           
         return redirect()->back()
         ->with('message', 'Action Sucessful!');
-        }
+      }
+
+      //Decline withdrawal Request
+      public function dwithdrawal($id){
+  
+        $withdrawal=withdrawals::where('id',$id)->first();
+        $user=users::where('id',$withdrawal->user)->first();
+        withdrawals::where('id',$id)
+        ->update([
+        'status' => 'Declined',
+        ]);
+
+        users::where('id',$user->id)
+        ->update([
+        'account_bal' => $user->account_bal + $withdrawal->amount,
+        ]);
+        
+        $settings=settings::where('id', '=', '1')->first();
+          
+          //send email notification
+          $objDemo = new \stdClass();
+          $objDemo->message = "This is to inform you that the withdrawal request for $settings->currency$withdrawal->amount was not successful.\nContact admin for more clarification.";
+          $objDemo->sender = $settings->site_name;
+          $objDemo->subject ="Unsuccessful withdrawal";
+          $objDemo->date = \Carbon\Carbon::Now();
+              
+          Mail::bcc($user->email)->send(new NewNotification($objDemo));
+          
+        return redirect()->back()
+        ->with('message', 'Action Sucessful!');
+      }
+      
   
   
        //Trash Plans route

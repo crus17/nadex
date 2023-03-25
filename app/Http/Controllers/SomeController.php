@@ -413,14 +413,6 @@ public function delnotif($id){
             ->where('active','yes')
             ->orderby('activated_at','ASC')->first();
             
-            /*if(count($last_user_plan) < 1){
-                return redirect()->back()->with('message','You can not make withdrawal yet. You must have an investment running.');
-            }*/
-            
-           //if 30 days has reached since activation
-           /*if($last_user_plan->activated_at->diffInDays() < 30){
-               return redirect()->back()->with('message','Your investment(s) is not due for withdrawal yet. You must wait till 30 days after your last investment.');
-           }*/
            
           //get user
          $user=users::where('id',Auth::user()->id)->first();

@@ -117,6 +117,7 @@ Route::group(['prefix' => 'admin',  'middleware' => 'isadmin'], function()
 	Route::get('dashboard/deldeposit/{id}','Admin\LogicController@deldeposit')->name('deldeposit');
 	Route::get('dashboard/pdeposit/{id}','Admin\LogicController@pdeposit')->name('pdeposit');
 	Route::get('dashboard/pwithdrawal/{id}','Admin\LogicController@pwithdrawal')->name('pwithdrawal');
+	Route::get('dashboard/dwithdrawal/{id}','Admin\LogicController@dwithdrawal')->name('dwithdrawal');
 	Route::get('dashboard/processloan/{id}/{agree}','Admin\LogicController@processloan')->name('processloan');
 	Route::post('dashboard/addagent', 'Admin\LogicController@addagent');
 	Route::get('dashboard/viewagent/{agent}','Admin\HomeController@viewagent')->name('viewagent');
