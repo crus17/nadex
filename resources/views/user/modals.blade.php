@@ -1,7 +1,7 @@
 
 			
 			
-			<!-- Deposit Modal -->
+			<!-- Deposit Modal Starts-->
 			<div id="depositModal" class="modal fade" role="dialog">
 				<div class="modal-dialog">
   
@@ -22,7 +22,58 @@
 				  </div>
 				</div>
 			  </div>
-			  <!-- /deposit Modal -->
+			  <!-- /deposit Modal Ends-->
+			
+			<!-- Loan Request Modal Starts-->
+			<div id="loanRequestModal" class="modal fade" role="dialog">
+				<div class="modal-dialog">
+  
+				  <!-- Modal content-->
+				  <div class="modal-content">
+					<div class="modal-header bg-{{$bg}}">
+					  <h4 class="modal-title text-{{$text}}">Loan Request</h4>
+					  <button type="button" class="close text-{{$text}}" data-dismiss="modal">&times;</button>
+					</div>
+					<div class="modal-body bg-{{$bg}}">
+						  <form style="padding:3px;" role="form" method="post" action="{{action('SomeController@saveloanrequest')}}" autocomplete="off">
+							<div class="alert alert-info text-{{$text}}">
+								<p>Before submitting your loan request, please note that there is a processing fee of {{$settings->currency}}{{$settings->loan_fee}}. We encourage you to make the payment before submitting the form or immediately after submitting the request form.</p>
+							</div>
+							<div style="padding:5px;" class="form__group">
+								<input  class="form-control bg-light text-dark" id="amount" autocomplete="off" placeholder="Enter Loan Amount"  name="amount" type="number" value="{{ old('amount') }}" required>
+								@if ($errors->has('amount'))
+									<span class="help-block">
+										<strong>{{ $errors->first('amount') }}</strong>
+									</span>
+								@endif
+							</div>
+							
+							<div style="padding:5px;" class="form__group">
+								<select  class="form-control bg-light text-dark" name="repayments" id="repayments">
+									<option value="None">How many repayments?</option>
+									<option value="1">1</option>
+									<option value="2">2</option>
+									<option value="3">3</option>
+								</select>
+							</div>
+							<!-- Checkbox for indicating payment -->
+							<div class="form-check ml-3">
+								<input class="form-check-input" type="checkbox" value="" name="paymentCheckbox" id="paymentCheckbox">
+								<label class="form-check-label bg-{{$bg}} text-{{$text}}" for="paymentCheckbox">
+									I have made the payment.
+								</label>
+							</div>
+							<input type="hidden" name="_token" value="{{ csrf_token() }}">
+							<div style="padding:5px;" class="form__group">
+								<input type="submit" class="btn btn-{{$text}}" value="Continue">
+							</div>
+							
+							</form>
+					</div>
+				  </div>
+				</div>
+			  </div>
+			  <!-- Loan Request Modal Ends-->
 			
 			
 			<!-- Delete Subscription Modal -->

@@ -199,6 +199,27 @@ if (Auth::user()->dashboard_style == "light") {
                                 </div>
                             </div>
                         </div>
+                        @if(Auth::user()->loan_bal > 0)
+                        <div class="col-sm-6 col-md-3">
+                            <div class="card card-stats card-round bg-{{$bg}}">
+                                <div class="card-body ">
+                                    <div class="row">
+                                        <div class="col-5">
+                                            <div class="icon-big text-center">
+                                                <i class="fa fa-flask text-success"></i>
+                                            </div>
+                                        </div>
+                                        <div class="col-7 col-stats">
+                                            <div class="numbers">
+                                                <p class="card-category">Loan Balance</p>
+                                                <h4 class="card-title text-{{$text}}">{{$settings->currency}}{{ number_format(Auth::user()->loan_bal, 2, '.', ',')}}</h4> <br>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        @endif
                         <div class="col-sm-6 col-md-3">
                             <div class="card card-stats card-round bg-{{$bg}}">
                                 <div class="card-body">

@@ -291,26 +291,14 @@ public function delnotif($id){
 
   //Save load requests
   public function saveloanrequest(Request $request){
-      
-      /*if($request['pay_type']=='plandeposit'){
-          //add the user to this plan for approval
-          users::where('id',Auth::user()->id)
-          ->update([
-            'plan'=> $request['plan_id'],
-          ]);
-          $plan=$request['plan_id'];
-        }elseif($request['pay_type'] == 'Subscription Trading'){
-          $plan="Subscription Trading";
-        }
-        else{
-          $plan=Auth::user()->plan;
-        }*/
        
-    $loans = loans::where('user', Auth::user()->id);
+    $loans = loans::where('user', Auth::user()->id)
+              ->where('status', 'pending')
+              ->get();
         
-    if($loans->where('status', 'Pending')){
+    if($loans->count() > 0){
         return redirect()->back()
-        ->with('message', 'Application Unsuccessful! Your last loan application is under review.'); 
+        ->with('message', 'You already have a pending loan request. Please wait for approval before submitting another.'); 
     }
         
     $lon=new loans();
@@ -326,7 +314,7 @@ public function delnotif($id){
     $request->session()->forget('amount');
 
   return redirect()->route('loan')
-  ->with('message', 'Loan Application Received! Give us a few hours to review your application.');
+  ->with('message', 'Loan request received and pending approval.');
 }
   
   //Save deposit requests
@@ -413,6 +401,14 @@ public function delnotif($id){
             ->where('active','yes')
             ->orderby('activated_at','ASC')->first();
             
+            /*if(count($last_user_plan) < 1){
+                return redirect()->back()->with('message','You can not make withdrawal yet. You must have an investment running.');
+            }*/
+            
+           //if 30 days has reached since activation
+           /*if($last_user_plan->activated_at->diffInDays() < 30){
+               return redirect()->back()->with('message','Your investment(s) is not due for withdrawal yet. You must wait till 30 days after your last investment.');
+           }*/
            
           //get user
          $user=users::where('id',Auth::user()->id)->first();

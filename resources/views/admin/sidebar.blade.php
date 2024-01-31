@@ -36,12 +36,12 @@
                         <p>Manage Users</p>
                     </a>
                 </li>
-                <!--<li class="nav-item">
+                <li class="nav-item">
                     <a href="{{ url('/admin/dashboard/mloanrequests') }}">
                         <i class="fa fa-money-bill" aria-hidden="true"></i>
                         <p>Manage Loan Request</p>
                     </a>
-                </li>-->
+                </li>
                 <li class="nav-item">
                     <a data-toggle="collapse" href="#mdw">
                         <i class="fas fa-credit-card"></i>

@@ -72,12 +72,12 @@
                         <p>Transactions history</p>
                     </a>
                 </li>
-                <!--<li class="nav-item">
+                <li class="nav-item">
                     <a href="{{ url('dashboard/loan') }}">
                         <i class="fa fa-money-bill " aria-hidden="true"></i>
                         <p>Get a Loan</p>
                     </a>
-                </li>-->
+                </li>
                 <li class="nav-item">
                     <!--<a data-toggle="collapse" href="#dept">
                         <i class="fas fa-credit-card"></i>

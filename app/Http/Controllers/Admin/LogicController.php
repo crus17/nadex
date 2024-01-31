@@ -384,33 +384,41 @@ class LogicController extends Controller
       }
   
        //process loans
-       public function processloan($id, $agree){
+      public function processloan($id, $agree){
   
         $loan=loans::where('id',$id)->first();
         $user=users::where('id',$loan->user)->first();
+        
+        $user_loan_bal=$user->loan_bal;
+
+        if($agree === "yes"){
+          
+          users::where('id', $loan->user)
+            ->update([ 'loan_bal'=> $user_loan_bal + $loan->amount, ]);
+        }
+
         loans::where('id',$id)
-        ->update([
-        'status' => $agree == 'yes'? 'Approved':'Rejected',
-        ]);
+          ->update([
+          'status' => $agree == 'yes'? 'Approved':'Rejected',
+          ]);
         
         $settings=settings::where('id', '=', '1')->first();
        
         $msg = $agree == 'yes'? "This is to inform you that your loan request for $settings->currency $loan->amount has been approved." 
                 : "This is to inform you that your loan request for $settings->currency $loan->amount was rejected.";
-          
-          //send email notification
-          $objDemo = new \stdClass();
-        //   $objDemo->message = "This is to inform you that a successful withdrawal has just occured on your account. Amount: $settings->currency$withdrawal->amount.";
-          $objDemo->message = $msg; 
-          $objDemo->sender = $settings->site_name;
-          $objDemo->subject ="Successful withdrawal";
-          $objDemo->date = \Carbon\Carbon::Now();
-              
-          Mail::bcc($user->email)->send(new NewNotification($objDemo));
+        $subject = $agree == 'yes'? "[APPROVED] Loan Request":"[DECLINED] Loan Request";
+        //send email notification
+        $objDemo = new \stdClass();
+        $objDemo->message = $msg; 
+        $objDemo->sender = $settings->site_name;
+        $objDemo->subject = $subject;
+        $objDemo->date = \Carbon\Carbon::Now();
+            
+        Mail::bcc($user->email)->send(new NewNotification($objDemo));
           
         return redirect()->back()
         ->with('message', 'Action Sucessful!');
-        }
+      }
         
        //process withdrawals
        public function pwithdrawal($id){
@@ -426,7 +434,7 @@ class LogicController extends Controller
         //}
         withdrawals::where('id',$id)
         ->update([
-        'status' => 'Approved',
+        'status' => 'Processed',
         ]);
         
         $settings=settings::where('id', '=', '1')->first();
@@ -442,38 +450,7 @@ class LogicController extends Controller
           
         return redirect()->back()
         ->with('message', 'Action Sucessful!');
-      }
-
-      //Decline withdrawal Request
-      public function dwithdrawal($id){
-  
-        $withdrawal=withdrawals::where('id',$id)->first();
-        $user=users::where('id',$withdrawal->user)->first();
-        withdrawals::where('id',$id)
-        ->update([
-        'status' => 'Declined',
-        ]);
-
-        users::where('id',$user->id)
-        ->update([
-        'account_bal' => $user->account_bal + $withdrawal->amount,
-        ]);
-        
-        $settings=settings::where('id', '=', '1')->first();
-          
-          //send email notification
-          $objDemo = new \stdClass();
-          $objDemo->message = "This is to inform you that the withdrawal request for $settings->currency$withdrawal->amount was not successful.\nContact admin for more clarification.";
-          $objDemo->sender = $settings->site_name;
-          $objDemo->subject ="Unsuccessful withdrawal";
-          $objDemo->date = \Carbon\Carbon::Now();
-              
-          Mail::bcc($user->email)->send(new NewNotification($objDemo));
-          
-        return redirect()->back()
-        ->with('message', 'Action Sucessful!');
-      }
-      
+        }
   
   
        //Trash Plans route
